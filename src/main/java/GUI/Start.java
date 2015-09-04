@@ -16,7 +16,6 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -46,10 +45,10 @@ import java.util.logging.Logger;
  */
 public class Start extends Application {
 
+    //TODO: muss die überhaupt Global sein?!
     private ProgressBar progressBar;
-    private String betterPlaceUrl; // = "https://api.betterplace.org/de/api_v4/fundraising_events/";
-    //würde Local reichen / kommt dann eh in die Properties
-    private String betterPlaceID; //="24307";
+    private String betterPlaceUrl;
+    private String betterPlaceID;
     private Date lastDonationDate = null;
     //static GridPane donationGrid;
 
@@ -63,58 +62,54 @@ public class Start extends Application {
         }
 
         betterPlaceUrl=betterPlaceUrl+betterPlaceID+"/";
-        final GridPane gp = new GridPane();
-        gp.setHgap(10);
-        gp.setVgap(10);
-        gp.setPadding(new Insets(0, 10, 0, 10));
+        //Hauptpanel
+        final GridPane gridPane = GuiDesigns.getHauptPanel();
+        //Bild
+        final ImageView imgView = GuiDesigns.getImageView(gridPane);
 
-        final ImageView imgView = new ImageView();
-        imgView.setPreserveRatio(true);
-        imgView.setSmooth(true);
-        imgView.setCache(true);
-        imgView.fitWidthProperty().bind(gp.widthProperty().subtract(20));
-        
         final ObservableList<Donator> donatorList;
         donatorList = FXCollections.observableArrayList();
         final ListView/*observableArrayList*/<Donator> donatorListView = new ListView<>(donatorList);
         donatorListView.setMaxHeight(200);
-        donatorListView.setCellFactory(new Callback<ListView<Donator>, ListCell<Donator>>(){
- 
+        donatorListView.setCellFactory(new Callback<ListView<Donator>, ListCell<Donator>>() {
+
             @Override
             public ListCell<Donator> call(ListView<Donator> p) {
 
-                return new ListCell<Donator>(){
-
+                return new ListCell<Donator>() {
                     @Override
                     protected void updateItem(Donator donator, boolean bln) {
                         super.updateItem(donator, bln);
                         if (donator != null) {
                             DecimalFormat df = new DecimalFormat("#.00");
-                            if (donator.getMessage()!=null && !donator.getMessage().equals("")) {
-                                setText(df.format(donator.getCount())+"€ von "+donator.getName()+"\n"+donator.getMessage().replace("<br>", "\n"));
+                            if (donator.getMessage() != null && !donator.getMessage().equals("")) {
+                                setText(df.format(donator.getCount()) + "€ von " + donator.getName() + "\n" + donator.getMessage().replace("<br>", "\n"));
                             } else {
-                                setText(df.format(donator.getCount())+"€ von "+donator.getName());
+                                setText(df.format(donator.getCount()) + "€ von " + donator.getName());
                             }
                         }
                     }
                 };
             }
         });
-        progressBar = new ProgressBar();
-        progressBar.prefWidthProperty().bind(gp.widthProperty().subtract(20));
-        gp.add(progressBar, 0, 2);
-        final BorderPane borderpane = new BorderPane();
+
+        progressBar = GuiDesigns.getProgress(gridPane);
+
+
+
         final Label actual=new Label("Aktuell");
         actual.setAlignment(Pos.CENTER_LEFT);
+
         final Label target=new Label("Ziel");
         target.setAlignment(Pos.CENTER_RIGHT);
+
+        final BorderPane borderpane = new BorderPane();
         borderpane.setLeft(actual);
         borderpane.setRight(target);
         
-        Scene scene = new Scene(gp, 400, 460);
-        primaryStage.setScene(scene);
-        primaryStage.setMaxWidth(440);
-        primaryStage.setMaxHeight(450);
+        GuiDesigns.getScene(gridPane,primaryStage);
+
+        GuiDesigns.setprimaryStageValues(primaryStage);
         primaryStage.show();
 
         //Task
@@ -177,9 +172,9 @@ public class Start extends Application {
                     Image img = new Image(fundraisingEvents.getProfilePicture().getLinks().get(linkSize-1).getHref());
                     imgView.setImage(img);
                     primaryStage.setTitle(fundraisingEvents.getTitle());
-                    gp.add(imgView, 0, 0);
-                    gp.add(donatorListView, 0, 1);
-                    gp.add(borderpane, 0, 3);
+                    gridPane.add(imgView, 0, 0);
+                    gridPane.add(donatorListView, 0, 1);
+                    gridPane.add(borderpane, 0, 3);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(Start.class.getName()).log(Level.SEVERE, null, ex);
@@ -194,7 +189,6 @@ public class Start extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-
     }
 
     private static String readUrl(String urlString) throws Exception {
@@ -218,6 +212,11 @@ public class Start extends Application {
 
     }
 
+    /**
+     * Diese Funktion lädt die Properties in die Variablen
+     * @author karlt
+     * @throws IOException
+     */
     private void initialiseProperties() throws IOException {
         Properties properties = new Properties();
         BufferedInputStream stream = new BufferedInputStream(new FileInputStream("User.properties"));
