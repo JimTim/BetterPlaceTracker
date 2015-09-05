@@ -9,6 +9,7 @@ import BetterPlaceAPI.BetterPlaceDonator;
 import BetterPlaceAPI.Donator;
 import BetterPlaceAPI.FundraisingEvents;
 import BetterPlaceAPI.Opinions;
+import Control.PropertyHandler;
 import Tools.ISO8601;
 import com.google.gson.Gson;
 import javafx.animation.KeyFrame;
@@ -17,7 +18,6 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -30,7 +30,9 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -50,16 +52,20 @@ public class Start extends Application {
     private String betterPlaceUrl;
     private String betterPlaceID;
     private Date lastDonationDate = null;
+    private String propertyFile = "User.properties";
     //static GridPane donationGrid;
 
     @Override
     public void start(final Stage primaryStage) {
 
         try {
-            initialiseProperties();
+            Properties properties = PropertyHandler.readProperties(propertyFile);
+            betterPlaceUrl = properties.getProperty("betterPlaceUrl");
+            betterPlaceID = properties.getProperty("betterPlaceID");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         betterPlaceUrl=betterPlaceUrl+betterPlaceID+"/";
         //Hauptpanel
@@ -210,20 +216,5 @@ public class Start extends Application {
             }
         }
 
-    }
-
-    /**
-     * Diese Funktion lädt die Properties in die Variablen
-     * @author karlt
-     * @throws IOException
-     */
-    private void initialiseProperties() throws IOException {
-        Properties properties = new Properties();
-        BufferedInputStream stream = new BufferedInputStream(new FileInputStream("User.properties"));
-        properties.load(stream);
-        stream.close();
-
-        betterPlaceUrl = properties.getProperty("betterPlaceUrl");
-        betterPlaceID = properties.getProperty("betterPlaceID");
     }
 }
