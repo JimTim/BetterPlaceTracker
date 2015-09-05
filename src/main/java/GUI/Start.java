@@ -9,6 +9,7 @@ import BetterPlaceAPI.BetterPlaceDonator;
 import BetterPlaceAPI.Donator;
 import BetterPlaceAPI.FundraisingEvents;
 import BetterPlaceAPI.Opinions;
+import Control.Soundhandler;
 import Tools.ISO8601;
 import com.google.gson.Gson;
 import javafx.animation.KeyFrame;
@@ -39,6 +40,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static Control.Soundhandler.*;
 
 /**
  *
@@ -158,7 +161,8 @@ public class Start extends Application {
                                     }
                                 }
                                 if (!found){
-                                     donatorList.add(newDonator);
+                                    donatorList.add(newDonator);
+                                    Soundhandler.playSound();
                                 }
                             }
                         }
