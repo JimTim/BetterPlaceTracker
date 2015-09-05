@@ -21,8 +21,10 @@ public class WriteForOBS {
 
      if (file != null) {
      // Make sure it has the correct extension
+
      if (!file.getPath().endsWith(".txt")) {
      file = new File(file.getPath() + ".txt");
+
      }
      String pfadname = file.getAbsolutePath();
      }
