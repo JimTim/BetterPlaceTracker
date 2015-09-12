@@ -7,7 +7,7 @@ package GUI;
 
 import BetterPlaceAPI.Donator;
 import BetterPlaceAPI.FundraisingEvents;
-import Control.FiveScondWonder;
+import Control.FiveSecondWonder;
 import Control.PropertyHandler;
 import Control.UrlReader;
 import com.google.gson.Gson;
@@ -43,7 +43,7 @@ public class Start extends Application {
     private String betterPlaceUrl;
     private String betterPlaceID;
     private String propertyFile = "User.properties";
-    private FiveScondWonder fiveScondWonder = new FiveScondWonder();
+    private FiveSecondWonder fiveSecondWonder = new FiveSecondWonder();
     //static GridPane donationGrid;
 
     @Override
@@ -92,7 +92,7 @@ public class Start extends Application {
             try {
 
                 //Der name ist noch nicht Ideal, bitte mal umbennen nach Funktion und testen
-                fiveScondWonder.givemefivesconds(betterPlaceUrl,donatorList);
+                fiveSecondWonder.givemefivesconds(betterPlaceUrl,donatorList);
 
                 String json;
                 Gson gson = new Gson();

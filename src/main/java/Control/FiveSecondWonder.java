@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by karl on 12.09.15.
  */
-public class FiveScondWonder {
+public class FiveSecondWonder {
     private Date lastDonationDate = null;
 
     /**
